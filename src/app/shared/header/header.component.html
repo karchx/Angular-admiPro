@@ -1,6 +1,3 @@
-<!-- ============================================================== -->
-<!-- Topbar header - style you can find in pages.scss -->
-<!-- ============================================================== -->
 <header class="topbar">
   <nav class="navbar top-navbar navbar-expand-md navbar-light">
     <!-- ============================================================== -->
@@ -353,11 +350,14 @@
               </li>
               <li role="separator" class="divider"></li>
               <li>
-                <a href="#"><i class="ti-settings"></i> Account Setting</a>
+                <a routerLink="account-setting"><i class="ti-settings"></i> Account Setting</a>
               </li>
               <li role="separator" class="divider"></li>
               <li>
-                <a href="#"><i class="fa fa-power-off"></i> Logout</a>
+                <a routerLink="/login">
+                  <i class="fa fa-power-off"></i> 
+                  Logout
+                </a>
               </li>
             </ul>
           </div>
@@ -366,6 +366,4 @@
     </div>
   </nav>
 </header>
-<!-- ============================================================== -->
-<!-- End Topbar header -->
-<!-- ============================================================== -->
+
