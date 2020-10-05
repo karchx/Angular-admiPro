@@ -40,7 +40,7 @@ export class LoginComponent implements OnInit {
         } else {
           localStorage.removeItem('email');
         }
-
+        console.log(resp);
         this.router.navigateByUrl('/');
       }, (err) => Swal.fire('Error', err.error.msg, 'error'));
 
