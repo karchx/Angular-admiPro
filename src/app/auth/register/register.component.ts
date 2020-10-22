@@ -36,7 +36,7 @@ export class RegisterComponent {
     }
     //Realizar el posteo
     this.usuarioService.crearUsuario( this.registerForm.value )
-      .subscribe( resp => {
+      .subscribe( () => {
         this.router.navigateByUrl('/');
      }, (err) => {
       Swal.fire('Error', err.error.msg, 'error');

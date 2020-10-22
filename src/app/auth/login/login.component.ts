@@ -34,13 +34,12 @@ export class LoginComponent implements OnInit {
 
   login() {
     this.usuarioService.login(this.loginForm.value)
-      .subscribe(resp => {
+      .subscribe( () => {
         if (this.loginForm.get('remember').value) {
           localStorage.setItem('email', this.loginForm.get('email').value);
         } else {
           localStorage.removeItem('email');
         }
-        console.log(resp);
         this.router.navigateByUrl('/');
       }, (err) => Swal.fire('Error', err.error.msg, 'error'));
 

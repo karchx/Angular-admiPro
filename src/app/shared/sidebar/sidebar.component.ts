@@ -12,7 +12,7 @@ import { Usuario } from '../../models/usuarios.model';
 export class SidebarComponent implements OnInit {
   public menu: any[]
   public usuario:Usuario;
-
+  
   constructor(private sidebarService:SidebarService, 
               private usuarioService:UsuarioService) {
     this.menu = sidebarService.menus;

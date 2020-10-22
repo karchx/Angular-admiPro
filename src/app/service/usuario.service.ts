@@ -1,13 +1,13 @@
 import { Injectable, NgZone } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
+
 import { catchError, map, tap } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
 
 import { environment } from '../../environments/environment';
 
-import { RegisterForm } from '../interfaces/register-form.interface'
-import { LoginForm } from '../interfaces/login-form.interface';
-import { Router } from '@angular/router';
+import { RegisterForm, LoginForm, CargarUsuarios } from '../interfaces/interfaces'
 import { Usuario } from '../models/usuarios.model';
 
 const base_url = environment.base_url;
@@ -23,7 +23,7 @@ declare const gapi: any;
 })
 
 export class UsuarioService {
-  public auth2: any;
+  public auth2: {signOut()};
   public usuario: Usuario;
   constructor(private http: HttpClient,
     private router: Router,
@@ -38,15 +38,19 @@ export class UsuarioService {
   }
 
   get uid(): string {
-    return this.usuario.id || '';
+    return this.usuario._id || '';
   }
 
-  validarToken(): Observable<boolean> {
-    return this.http.get(`${base_url}/auth/renew`, {
+  get headers() {
+    return {
       headers: {
         'x-token': this.token
       }
-    }).pipe(
+    }
+  }
+
+  validarToken(): Observable<boolean> {
+    return this.http.get(`${base_url}/auth/renew`, this.headers).pipe(
       map((resp: any) => {
         const { email, google, nombre, rol, img = '', _id } = resp.usuario;
         this.usuario = new Usuario(nombre, email, '', rol, google, img, _id);
@@ -54,7 +58,7 @@ export class UsuarioService {
         localStorage.setItem('token', resp.token);
         return true;
       }),
-      catchError(error => of(false)));
+      catchError(() => of(false)));
   }
 
   crearUsuario(formData: RegisterForm) {
@@ -67,14 +71,10 @@ export class UsuarioService {
   actualizarPerfil(data: { email: string, nombre: string, rol:string }) {
     data = {
       ...data, 
-      rol: this.usuario.role
+      rol: this.usuario.rol
     };
 
-    return this.http.put(`${base_url}/usuarios/${this.uid}`, data, {
-      headers: {
-        'x-token': this.token
-      }
-    });
+    return this.http.put(`${base_url}/usuarios/${this.uid}`, data, this.headers);
   }
 
   login(formData: LoginForm) {
@@ -115,4 +115,26 @@ export class UsuarioService {
     });
   }
 
+  cargarUsuarios(by: number = 0) {
+    const url = `${base_url}/usuarios?by=${by}`; //TODO: agregar a todos los metodos
+    return this.http.get<CargarUsuarios>(url, this.headers)
+      .pipe(
+        //el delay de operator simula una conexion lenta
+        map( resp => {
+          const usuarios = resp.usuarios.map(
+             user => new Usuario(user.nombre, user.email, '', user.rol, user.google, user.img, user._id) 
+          );
+          return {
+            total: resp.total,
+            usuarios
+          };
+        })
+      );
+  }
+
+  deleteUser( user: Usuario ) {
+    const url = `${base_url}/usuarios/${user._id}`; 
+    return this.http.delete(url, this.headers);
+
+  }
 }
