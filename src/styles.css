@@ -1,32 +1,51 @@
 .fast {
-	-webkit-animation-duration: 0.3s;
-	animation-duration: 0.3s;
-	-webkit-animation-fill-mode: both;
-	animation-fill-mode: both;
+  -webkit-animation-duration: 0.3s;
+  animation-duration: 0.3s;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
 }
 
-#themecolors .selector, .cursor {
-	cursor: pointer;
+#themecolors .selector,
+.cursor {
+  cursor: pointer;
 }
 
-#googleButton{
-	justify-content: center;
-	align-items: center;
-	display: flex;
-	text-align: center;
+#googleButton {
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  text-align: center;
 }
 
-.img-avatar{
-	height: 200px;
-	width: 200px;
-	border-radius: 50%;
+.img-avatar {
+  height: 200px;
+  width: 200px;
+  border-radius: 50%;
 }
 
 .w100 {
-	width: 100px;
+  width: 100px;
+}
+
+.w140 {
+  width: 140px;
 }
 
 .avatar {
-	border-radius: 100%;
-	width: 30px;
+  border-radius: 100%;
+  width: 30px;
+}
+
+.oculto {
+  display: none;
+}
+
+.fondo-modal-imagen {
+  background-color: rgba(0, 0, 0, 0.4);
+  position: fixed;
+  left: 0px;
+  top: 0px;
+  width: 100%;
+  height: 100%;
+  z-index: 9999;
 }

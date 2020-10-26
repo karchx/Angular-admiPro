@@ -70,9 +70,9 @@ export class UsuarioService {
 
   actualizarPerfil(data: { email: string, nombre: string, rol:string }) {
     data = {
-      ...data, 
+      ...data,
       rol: this.usuario.rol
-    };
+    }
 
     return this.http.put(`${base_url}/usuarios/${this.uid}`, data, this.headers);
   }
@@ -135,6 +135,10 @@ export class UsuarioService {
   deleteUser( user: Usuario ) {
     const url = `${base_url}/usuarios/${user._id}`; 
     return this.http.delete(url, this.headers);
-
   }
+
+  guardarPerfil(data: Usuario) {
+    return this.http.put(`${base_url}/usuarios/${data._id}`, data, this.headers);
+  }
+
 }
