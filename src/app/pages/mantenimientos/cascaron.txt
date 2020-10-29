@@ -33,7 +33,7 @@
 								<th>Nombre</th>
 								<th>Rol</th>
 								<th>Auth</th>
-								<th class="text-nowrap">Actions</th>
+								<th class="text-nowrap text-center">Actions</th>
 							</tr>
 						</thead>
 						<tbody>

@@ -28,8 +28,8 @@
   <div class="col-12">
     <div class="card">
       <div class="card-body">
-        <h4 class="card-title">Total users {{ totalUsuarios }}</h4>
-        <h6 class="card-subtitle">Registered users</h6>
+        <h4 class="card-title">Total users</h4>
+        <h6 class="card-subtitle">Registered users ({{ totalUsuarios }})</h6>
         <div class="table-responsive">
           <table class="table table-striped">
             <thead>
@@ -49,7 +49,7 @@
                     [src]="usuario._imagenUrl"
                     alt="User avatar"
                     class="avatar cursor"
-		    (click)="abrirModal(usuario)"
+                    (click)="abrirModal(usuario)"
                   />
                 </td>
                 <td>{{ usuario.email }}</td>

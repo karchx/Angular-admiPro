@@ -4,6 +4,8 @@ import { environment } from '../../environments/environment';
 import { map } from 'rxjs/operators';
 
 import { Usuario } from '../models/usuarios.model';
+import { Hospital } from '../models/hospital.model';
+import { Medico } from '../models/medicos.model';
 
 const base_url = environment.base_url;
 
@@ -32,6 +34,14 @@ export class SearchesService {
     );
   }
 
+  private transformHospitals( result: any[] ): Hospital[] {
+    return result;
+  }
+
+  private transformMedicos( result: any[] ): Medico[] {
+    return result;
+  }
+
   search(type: 'usuarios' | 'medicos' | 'hospitales',
     termino: string) {
     const url = `${base_url}/todo/collection/${type}/${termino}`; //TODO: agregar a todos los metodos
@@ -41,6 +51,12 @@ export class SearchesService {
           switch (type) {
             case 'usuarios':
               return this.transformUsers( resp.resultado );
+              
+            case 'hospitales':
+              return this.transformHospitals( resp.resultado );
+
+            case 'medicos':
+              return this.transformMedicos( resp.resultado );
 
             default:
               return [];

@@ -7,7 +7,11 @@ import { Observable, of } from 'rxjs';
 
 import { environment } from '../../environments/environment';
 
-import { RegisterForm, LoginForm, CargarUsuarios } from '../interfaces/interfaces'
+import {
+  RegisterForm,
+  LoginForm,
+  CargarUsuarios
+} from '../interfaces/interfaces';
 import { Usuario } from '../models/usuarios.model';
 
 const base_url = environment.base_url;
@@ -21,14 +25,13 @@ declare const gapi: any;
 @Injectable({
   providedIn: 'root'
 })
-
 export class UsuarioService {
-  public auth2: {signOut()};
+  public auth2: { signOut() };
   public usuario: Usuario;
-  constructor(private http: HttpClient,
+  constructor(
+    private http: HttpClient,
     private router: Router,
     private ngZone: NgZone
-
   ) {
     this.googleInit();
   }
@@ -46,7 +49,7 @@ export class UsuarioService {
       headers: {
         'x-token': this.token
       }
-    }
+    };
   }
 
   validarToken(): Observable<boolean> {
@@ -58,46 +61,53 @@ export class UsuarioService {
         localStorage.setItem('token', resp.token);
         return true;
       }),
-      catchError(() => of(false)));
+      catchError(() => of(false))
+    );
   }
 
   crearUsuario(formData: RegisterForm) {
-    return this.http.post(`${base_url}/usuarios`, formData)
-      .pipe(tap((res: responseToken) => {
-        localStorage.setItem('token', res.token)
-      }));
+    return this.http.post(`${base_url}/usuarios`, formData).pipe(
+      tap((res: responseToken) => {
+        localStorage.setItem('token', res.token);
+      })
+    );
   }
 
-  actualizarPerfil(data: { email: string, nombre: string, rol:string }) {
+  actualizarPerfil(data: { email: string; nombre: string; rol: string }) {
     data = {
       ...data,
       rol: this.usuario.rol
-    }
+    };
 
-    return this.http.put(`${base_url}/usuarios/${this.uid}`, data, this.headers);
+    return this.http.put(
+      `${base_url}/usuarios/${this.uid}`,
+      data,
+      this.headers
+    );
   }
 
   login(formData: LoginForm) {
-    return this.http.post(`${base_url}/auth`, formData)
-      .pipe(tap((res: responseToken) => {
-        localStorage.setItem('token', res.token)
+    return this.http.post(`${base_url}/auth`, formData).pipe(
+      tap((res: responseToken) => {
+        localStorage.setItem('token', res.token);
       })
-      )
+    );
   }
 
   loginGoogle(token: string) {
-    return this.http.post(`${base_url}/auth/google`, { token })
-      .pipe(tap((res: responseToken) => {
-        localStorage.setItem('token', res.token)
+    return this.http.post(`${base_url}/auth/google`, { token }).pipe(
+      tap((res: responseToken) => {
+        localStorage.setItem('token', res.token);
       })
-      )
+    );
   }
 
   googleInit() {
     return new Promise(resolve => {
       gapi.load('auth2', () => {
         this.auth2 = gapi.auth2.init({
-          client_id: '254893407351-ouvunt9bvdrv51s2b32ompeb9mpbcd00.apps.googleusercontent.com',
+          client_id:
+            '254893407351-ouvunt9bvdrv51s2b32ompeb9mpbcd00.apps.googleusercontent.com',
           cookiepolicy: 'single_host_origin'
         });
         resolve();
@@ -111,34 +121,45 @@ export class UsuarioService {
     this.auth2.signOut().then(() => {
       this.ngZone.run(() => {
         this.router.navigateByUrl('/login');
-      })
+      });
     });
   }
 
   cargarUsuarios(by: number = 0) {
     const url = `${base_url}/usuarios?by=${by}`; //TODO: agregar a todos los metodos
-    return this.http.get<CargarUsuarios>(url, this.headers)
-      .pipe(
-        //el delay de operator simula una conexion lenta
-        map( resp => {
-          const usuarios = resp.usuarios.map(
-             user => new Usuario(user.nombre, user.email, '', user.rol, user.google, user.img, user._id) 
-          );
-          return {
-            total: resp.total,
-            usuarios
-          };
-        })
-      );
+    return this.http.get<CargarUsuarios>(url, this.headers).pipe(
+      //el delay de operator simula una conexion lenta
+      map(resp => {
+        const usuarios = resp.usuarios.map(
+          user =>
+            new Usuario(
+              user.nombre,
+              user.email,
+              '',
+              user.rol,
+              user.google,
+              user.img,
+              user._id
+            )
+        );
+        return {
+          total: resp.total,
+          usuarios
+        };
+      })
+    );
   }
 
-  deleteUser( user: Usuario ) {
-    const url = `${base_url}/usuarios/${user._id}`; 
+  deleteUser(user: Usuario) {
+    const url = `${base_url}/usuarios/${user._id}`;
     return this.http.delete(url, this.headers);
   }
 
   guardarPerfil(data: Usuario) {
-    return this.http.put(`${base_url}/usuarios/${data._id}`, data, this.headers);
+    return this.http.put(
+      `${base_url}/usuarios/${data._id}`,
+      data,
+      this.headers
+    );
   }
-
 }
