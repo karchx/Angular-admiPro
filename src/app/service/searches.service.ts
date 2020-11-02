@@ -42,9 +42,14 @@ export class SearchesService {
     return result;
   }
 
+  searchGlobal (termino: string) {
+    const url = `${base_url}/todo/${termino}`;
+    return this.http.get<any[]>(url, this.headers);
+  } 
+
   search(type: 'usuarios' | 'medicos' | 'hospitales',
     termino: string) {
-    const url = `${base_url}/todo/collection/${type}/${termino}`; //TODO: agregar a todos los metodos
+    const url = `${base_url}/todo/collection/${type}/${termino}`;
     return this.http.get<any[]>(url, this.headers)
       .pipe(
         map((resp: any) => {

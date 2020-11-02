@@ -18,6 +18,7 @@ const base_url = environment.base_url;
 
 interface responseToken {
   token: string;
+  menu: [];
 }
 
 declare const gapi: any;
@@ -40,6 +41,10 @@ export class UsuarioService {
     return localStorage.getItem('token') || '';
   }
 
+  get rol(): 'ADMIN_ROL' | 'USER_ROL'{
+    return this.usuario.rol; 
+  }
+
   get uid(): string {
     return this.usuario._id || '';
   }
@@ -52,13 +57,18 @@ export class UsuarioService {
     };
   }
 
+ guardarLocalStorage(token: string, menu: any) {
+   localStorage.setItem('token', token);
+   localStorage.setItem('menu', JSON.stringify(menu));
+ }
+
   validarToken(): Observable<boolean> {
     return this.http.get(`${base_url}/auth/renew`, this.headers).pipe(
       map((resp: any) => {
         const { email, google, nombre, rol, img = '', _id } = resp.usuario;
         this.usuario = new Usuario(nombre, email, '', rol, google, img, _id);
-
-        localStorage.setItem('token', resp.token);
+	
+	this.guardarLocalStorage(resp.token, resp.menu);
         return true;
       }),
       catchError(() => of(false))
@@ -67,8 +77,8 @@ export class UsuarioService {
 
   crearUsuario(formData: RegisterForm) {
     return this.http.post(`${base_url}/usuarios`, formData).pipe(
-      tap((res: responseToken) => {
-        localStorage.setItem('token', res.token);
+      tap((res: any) => {
+      	this.guardarLocalStorage(res.token, res.menu);
       })
     );
   }
@@ -88,16 +98,16 @@ export class UsuarioService {
 
   login(formData: LoginForm) {
     return this.http.post(`${base_url}/auth`, formData).pipe(
-      tap((res: responseToken) => {
-        localStorage.setItem('token', res.token);
+      tap((res: any) => {
+      	this.guardarLocalStorage(res.token, res.menu);
       })
     );
   }
 
   loginGoogle(token: string) {
     return this.http.post(`${base_url}/auth/google`, { token }).pipe(
-      tap((res: responseToken) => {
-        localStorage.setItem('token', res.token);
+      tap((res: any) => {
+      	this.guardarLocalStorage(res.token, res.menu);
       })
     );
   }
@@ -117,6 +127,7 @@ export class UsuarioService {
 
   logout() {
     localStorage.removeItem('token');
+    localStorage.removeItem('menu');
 
     this.auth2.signOut().then(() => {
       this.ngZone.run(() => {

@@ -2,6 +2,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { NgModule } from '@angular/core';
 
 import { AuthGuard } from '../guards/auth.guard';
+import { AdminGuard } from '../guards/admin.guard';
 
 import { PagesComponent } from './pages.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
@@ -17,6 +18,7 @@ import { UsuariosComponent } from './mantenimientos/usuarios/usuarios.component'
 import { HospitalesComponent } from './mantenimientos/hospitales/hospitales.component';
 import { MedicosComponent } from './mantenimientos/medicos/medicos.component';
 import { MedicoComponent } from './mantenimientos/medicos/medico.component';
+import { BusquedasComponent } from './busquedas/busquedas.component';
 
 const routes: Routes = [
   {
@@ -26,9 +28,14 @@ const routes: Routes = [
     children: [
       { path: '', component: DashboardComponent, data: { title: 'Dashboard' } },
       {
-        path: 'progress',
-        component: ProgressComponent,
-        data: { title: 'Progress' }
+        path: 'account-setting',
+        component: AccountSettingsComponent,
+        data: { title: 'Setting' }
+      },
+      {
+        path: 'busqueda/:termino',
+        component: BusquedasComponent,
+        data: { title: 'Search' }
       },
       {
         path: 'chart1',
@@ -36,28 +43,23 @@ const routes: Routes = [
         data: { title: 'Chart #1' }
       },
       {
-        path: 'account-setting',
-        component: AccountSettingsComponent,
-        data: { title: 'Setting' }
+        path: 'progress',
+        component: ProgressComponent,
+        data: { title: 'Progress' }
       },
       {
         path: 'promesas',
         component: PromesasComponent,
         data: { title: 'Promises' }
       },
-      { path: 'rxjs', component: RxjsComponent, data: { title: 'RxJs' } },
       {
         path: 'perfil',
         component: PerfilComponent,
         data: { title: 'Perfil de usuario' }
       },
+      { path: 'rxjs', component: RxjsComponent, data: { title: 'RxJs' } },
 
       //Mantenimientos
-      {
-        path: 'usuarios',
-        component: UsuariosComponent,
-        data: { title: 'Mantenimiento de usuarios' }
-      },
       {
         path: 'hospitales',
         component: HospitalesComponent,
@@ -72,6 +74,13 @@ const routes: Routes = [
         path: 'medico/:id',
         component: MedicoComponent,
         data: { title: 'Mantenimiento de medicos' }
+      },
+      //Administrado
+      {
+        path: 'usuarios',
+	canActivate: [AdminGuard],
+        component: UsuariosComponent,
+        data: { title: 'Mantenimiento de usuarios' }
       }
     ]
   }
@@ -81,4 +90,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class PagesRoutingModule {}
+export class PagesRoutingModule { }
